@@ -11,7 +11,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
 public class InMemoryUserRepository implements Repository<User> {
-
     Set<User> users;
 
     public void add(User user) {
@@ -33,4 +32,9 @@ public class InMemoryUserRepository implements Repository<User> {
                 .findFirst();
     }
 
+    public Optional<User> findByUsernameAndPassword(String username, String password) {
+        return users.stream()
+                .filter(u -> u.getUsername().equals(username) && u.getPassword().equals(password))
+                .findFirst();
+    }
 }

@@ -9,14 +9,13 @@ import ua.hillel.chatapp.storage.InMemoryUserRepository;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class InMemoryUserDetailsService implements UserDetailsService {
-
     InMemoryUserRepository repository;
 
     @Override
     public UserDetails findByUsername(String username) throws AuthenticationException {
         User user = repository.findByUsername(username)
                 .orElseThrow(() -> new AuthenticationException("User not found."));
-        return new UserDetails(user.getUsername(), user.getPassword());
+        return new UserDetails(user.getUsername(), user.getPassword(), user.getRole());
     }
 
 }
