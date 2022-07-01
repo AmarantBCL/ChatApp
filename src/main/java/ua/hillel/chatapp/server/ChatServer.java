@@ -10,8 +10,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
-public class ChatServer {
+public class ChatServer implements BasicClientHandler.OnLogOutEvent {
     private static final Logger log = LogManager.getLogger(ChatServer.class);
 
     List<ClientHandler> clientHandlers = new ArrayList<>();
@@ -23,7 +24,7 @@ public class ChatServer {
             log.info("Chat Server started successfully.");
             while (true) {
                 Socket potentialClient = serverSocket.accept();
-                new Thread(() -> {
+                Executors.newCachedThreadPool().execute(() -> {
                     try {
                         AuthenticationContext ctx = authenticationProcessor.process(potentialClient);
                         clientHandlers.add(
@@ -33,16 +34,23 @@ public class ChatServer {
                                         potentialClient.getOutputStream(),
                                         () -> clientHandlers.stream()
                                                 .map(ClientHandler::out)
-                                                .toList()
+                                                .toList(),
+                                        this
                                 )
                         );
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }).start();
+                });
             }
         } catch (IOException e) {
             throw new RuntimeException("SWW during server start up.", e);
         }
+    }
+
+    @Override
+    public void onClientLogOut(ClientHandler clientHandler) {
+        clientHandlers.remove(clientHandler);
+        AuthenticationContext.remove(AuthenticationContext.getUser());
     }
 }
