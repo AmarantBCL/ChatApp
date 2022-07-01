@@ -20,8 +20,6 @@ public class AuthenticationProcessor {
 
     @SneakyThrows
     public AuthenticationContext process(Socket socket) {
-        if (true) return new AuthenticationContext(new LoggedUser(
-                "Admin", "password", UserRole.ADMIN));
         while (true) {
             DataInputStream din = new DataInputStream(socket.getInputStream());
             DataOutputStream dout = new DataOutputStream(socket.getOutputStream());
