@@ -21,7 +21,6 @@ public class BasicClientHandler implements ClientHandler {
         this.name = name;
         this.in = new DataInputStream(in);
         this.out = new DataOutputStream(out);
-//        listen(outStreams.get());
         new Thread(() -> listen(outStreams)).start();
     }
 

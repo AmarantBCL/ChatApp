@@ -14,9 +14,6 @@ import java.util.List;
 public class ChatServer {
     private static final Logger log = LogManager.getLogger(ChatServer.class);
 
-//    List<ClientHandler> clientHandlers;
-//    AuthenticationProcessor authenticationProcessor;
-//    BroadcastMessenger broadcastMessenger;
     List<ClientHandler> clientHandlers = new ArrayList<>();
     AuthenticationProcessor authenticationProcessor = new AuthenticationProcessor(null);
 
