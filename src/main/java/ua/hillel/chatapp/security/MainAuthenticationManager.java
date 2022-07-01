@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MainAuthenticationManager implements AuthenticationManager {
     Logger logger = LogManager.getLogger(MainAuthenticationManager.class);
@@ -19,9 +20,7 @@ public class MainAuthenticationManager implements AuthenticationManager {
 
     public void doFilter(Socket socket, AuthenticationRequest request) throws IOException {
         try {
-            for (Authenticator authenticator : authenticators) {
-                authenticator.attemptAuthenticate(request);
-            }
+            authenticators.stream().forEach(a -> a.attemptAuthenticate(request));
         } catch (AuthenticationException e) {
             logger.debug(request.username() + " could not authenticate.");
         }
