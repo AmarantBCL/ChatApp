@@ -21,15 +21,16 @@ public class BasicClientHandler implements ClientHandler {
         this.name = name;
         this.in = new DataInputStream(in);
         this.out = new DataOutputStream(out);
-        listen(outStreams.get());
+//        listen(outStreams.get());
+        new Thread(() -> listen(outStreams)).start();
     }
 
     @SneakyThrows
-    private void listen(Iterable<OutputStream> outStreams) {
-        messenger.doBroadcast(name + " connected.", outStreams);
+    private void listen(Supplier<Iterable<OutputStream>> outStreams) {
+        messenger.doBroadcast(name + " connected.", outStreams.get());
         while (true) {
             String message = this.in.readUTF();
-            messenger.doBroadcast(message, outStreams);
+            messenger.doBroadcast(name + ": " + message, outStreams.get());
         }
     }
 
